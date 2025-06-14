@@ -1,28 +1,25 @@
-import React, { useEffect, useState } from 'react';
-import API from '../api/axios';
+import React, { useEffect, useState } from "react";
+import API from "../api/axios";
 
 const HomePage = () => {
-  const [courses, setCourses] = useState([]);
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
-    API.get('/courses')
-      .then(res => setCourses(res.data))
-      .catch(err => {
-        console.error('Failed to fetch courses:', err);
-        if (err.response?.status === 401) {
-          alert('Unauthorized, please login again');
-        }
-      });
+    const fetchData = async () => {
+      try {
+        const res = await API.get("/users");
+        setMessage("Welcome! You are authenticated.");
+      } catch (err) {
+        setMessage("You must log in first.");
+      }
+    };
+    fetchData();
   }, []);
 
   return (
     <div>
-      <h2>Available Courses</h2>
-      <ul>
-        {courses.map(course => (
-          <li key={course.id}>{course.title} - {course.description}</li>
-        ))}
-      </ul>
+      <h2>Home Page</h2>
+      <p>{message}</p>
     </div>
   );
 };
